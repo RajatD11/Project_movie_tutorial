@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
 
 
@@ -6,12 +7,14 @@ const MovieContext = createContext();
 export const useMovieContext = ()=> useContext(MovieContext);
 
 export const Movieprovider = ({children}) => {
-    const[favourite, setFavourite] = useState([]);
+    const[favourite, setFavourite] = useState(()=>{
+        const stored = localStorage.getItem('favourite');
+        return stored ? JSON.parse(stored) : [];
+    });
 
     useEffect(()=>{
-        const stored = localStorage.getItem('favourite');
-        if(stored) setFavourite(JSON.parse(stored));
-    },[])
+        localStorage.setItem('favourite', JSON.stringify(favourite));
+    },[favourite])
 
     useEffect(()=>{
         localStorage.setItem('favourite', JSON.stringify(favourite));
